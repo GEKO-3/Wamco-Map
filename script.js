@@ -10,7 +10,7 @@ svgContainer.addEventListener('wheel', (event) => {
     const delta = Math.sign(event.deltaY);
     const sensitivity = baseSensitivity * scale; // Increase sensitivity with scale
     scale -= delta * sensitivity;
-    scale = Math.max(1, Math.min(scale, 750));
+    scale = Math.max(1, Math.min(scale,750));
     svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
 });
 
@@ -37,35 +37,3 @@ svgContainer.addEventListener('mouseup', () => {
 svgContainer.addEventListener('mouseleave', () => {
     isPanning = false;
 });
-
-// Pinch to zoom functionality
-let initialDistance = null;
-
-svgContainer.addEventListener('touchstart', (event) => {
-    if (event.touches.length === 2) {
-        initialDistance = getDistance(event.touches[0], event.touches[1]);
-    }
-});
-
-svgContainer.addEventListener('touchmove', (event) => {
-    if (event.touches.length === 2 && initialDistance) {
-        const currentDistance = getDistance(event.touches[0], event.touches[1]);
-        const deltaDistance = currentDistance - initialDistance;
-        const sensitivity = baseSensitivity * scale; // Increase sensitivity with scale
-        scale += deltaDistance * sensitivity * 0.01;
-        scale = Math.max(1, Math.min(scale, 750));
-        svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
-        initialDistance = currentDistance;
-    }
-});
-
-svgContainer.addEventListener('touchend', () => {
-    initialDistance = null;
-});
-
-function getDistance(touch1, touch2) {
-    return Math.sqrt(
-        Math.pow(touch2.clientX - touch1.clientX, 2) +
-        Math.pow(touch2.clientY - touch1.clientY, 2)
-    );
-}
