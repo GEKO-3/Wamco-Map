@@ -3,16 +3,14 @@ const svgElement = svgContainer.querySelector('svg');
 let scale = 1;
 let panX = 0;
 let panY = 0;
+const baseSensitivity = 0.1;
 
 svgContainer.addEventListener('wheel', (event) => {
     event.preventDefault();
-    const scaleAmount = 0.1;
-    if (event.deltaY < 0) {
-        scale += scaleAmount;
-    } else {
-        scale -= scaleAmount;
-    }
-    scale = Math.min(Math.max(.125, scale), 20); // Increased max zoom level to 20
+    const delta = Math.sign(event.deltaY);
+    const sensitivity = baseSensitivity * scale; // Increase sensitivity with scale
+    scale -= delta * sensitivity;
+    scale = Math.max(0.1, Math.min(scale, 75));
     svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
 });
 
