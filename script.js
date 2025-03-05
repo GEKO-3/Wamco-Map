@@ -96,19 +96,20 @@ svgContainer.addEventListener('touchmove', (event) => {
         const currentDistance = getDistance(event.touches);
         const touchCenter = getTouchCenter(event.touches);
         const scaleChange = currentDistance / initialPinchDistance;
-        scale *= scaleChange;
-        scale = Math.max(1, Math.min(scale, 150));
+        const newScale = scale * scaleChange;
+        const clampedScale = Math.max(1, Math.min(newScale, 150));
 
         // Adjust pan to keep the touch center in the same position
-        const dx = (touchCenter.x - lastTouchCenter.x) * (scaleChange - 1);
-        const dy = (touchCenter.y - lastTouchCenter.y) * (scaleChange - 1);
+        const dx = (touchCenter.x - lastTouchCenter.x) * (clampedScale / scale - 1);
+        const dy = (touchCenter.y - lastTouchCenter.y) * (clampedScale / scale - 1);
         panX -= dx;
         panY -= dy;
 
         // Compensate for the drift more effectively
-        panX -= 5 * (scaleChange - 1) * touchCenter.x;
-        panY -= 5 * (scaleChange - 1) * touchCenter.y;
+        panX -= (clampedScale - scale) * touchCenter.x / scale;
+        panY -= (clampedScale - scale) * touchCenter.y / scale;
 
+        scale = clampedScale;
         initialPinchDistance = currentDistance;
         lastTouchCenter = touchCenter;
         updateTransform();
