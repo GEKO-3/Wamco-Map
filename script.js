@@ -9,12 +9,12 @@ function updateTransform() {
     const containerRect = svgContainer.getBoundingClientRect();
     const svgRect = svgElement.getBoundingClientRect();
 
-    // Increase the bounds for panning
-    const minX = containerRect.width - svgRect.width * 1.5;
-    const minY = containerRect.height - svgRect.height * 1.5;
+    // Further increase the bounds for panning
+    const minX = containerRect.width - svgRect.width * 2;
+    const minY = containerRect.height - svgRect.height * 2;
 
-    panX = Math.min(containerRect.width * 0.5, Math.max(minX, panX));
-    panY = Math.min(containerRect.height * 0.5, Math.max(minY, panY));
+    panX = Math.min(containerRect.width * 1, Math.max(minX, panX));
+    panY = Math.min(containerRect.height * 1, Math.max(minY, panY));
 
     svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
 }
@@ -53,13 +53,13 @@ svgContainer.addEventListener('mouseleave', () => {
 });
 
 document.getElementById('zoom-in').addEventListener('click', () => {
-    scale += baseSensitivity * 50// Increase zoom increment
+    scale += baseSensitivity * 50; // Increase zoom increment
     scale = Math.min(scale, 150);
     updateTransform();
 });
 
 document.getElementById('zoom-out').addEventListener('click', () => {
-    scale -= baseSensitivity * 50// Increase zoom increment
+    scale -= baseSensitivity * 50; // Increase zoom increment
     scale = Math.max(1, scale);
     updateTransform();
 });
