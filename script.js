@@ -105,9 +105,10 @@ svgContainer.addEventListener('touchmove', (event) => {
         panX -= dx;
         panY -= dy;
 
-        // Compensate for the drift more effectively
-        panX -= (clampedScale - scale) * touchCenter.x / scale;
-        panY -= (clampedScale - scale) * touchCenter.y / scale;
+        // Compensate for the drift more effectively based on zoom level
+        const compensationFactor = Math.log(clampedScale) / Math.log(1.5);
+        panX -= compensationFactor * (clampedScale - scale) * touchCenter.x / scale;
+        panY -= compensationFactor * (clampedScale - scale) * touchCenter.y / scale;
 
         scale = clampedScale;
         initialPinchDistance = currentDistance;
