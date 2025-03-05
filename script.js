@@ -9,13 +9,18 @@ function updateTransform() {
     const containerRect = svgContainer.getBoundingClientRect();
     const svgRect = svgElement.getBoundingClientRect();
 
-    // Further increase the bounds for panning
-    const minX = containerRect.width - svgRect.width * 2;
-    const minY = containerRect.height - svgRect.height * 2;
+    // Adjust the bounds for panning to allow viewing the top and left of the map
+    const minX = containerRect.width - svgRect.width * scale;
+    const minY = containerRect.height - svgRect.height * scale;
 
-    panX = Math.min(containerRect.width * 1, Math.max(minX, panX));
-    panY = Math.min(containerRect.height * 1, Math.max(minY, panY));
+    panX = Math.min(0, Math.max(minX, panX));
+    panY = Math.min(0, Math.max(minY, panY));
 
+    // Calculate the center of the current view
+    const centerX = containerRect.width / 2;
+    const centerY = containerRect.height / 2;
+
+    svgElement.style.transformOrigin = `${centerX}px ${centerY}px`; // Set zoom origin to center of current view
     svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
 }
 
@@ -62,4 +67,68 @@ document.getElementById('zoom-out').addEventListener('click', () => {
     scale -= baseSensitivity * 50; // Increase zoom increment
     scale = Math.max(1, scale);
     updateTransform();
+});
+
+let initialPinchDistance = null;
+let lastTouchCenter = null;
+
+function getDistance(touches) {
+    const [touch1, touch2] = touches;
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getTouchCenter(touches) {
+    const [touch1, touch2] = touches;
+    return {
+        x: (touch1.clientX + touch2.clientX) / 2,
+        y: (touch1.clientY + touch2.clientY) / 2,
+    };
+}
+
+svgContainer.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 1) {
+        isPanning = true;
+        const touch = event.touches[0];
+        startX = touch.clientX - panX;
+        startY = touch.clientY - panY;
+    } else if (event.touches.length === 2) {
+        initialPinchDistance = getDistance(event.touches);
+        lastTouchCenter = getTouchCenter(event.touches);
+    }
+});
+
+svgContainer.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    if (event.touches.length === 1 && isPanning) {
+        const touch = event.touches[0];
+        panX = touch.clientX - startX;
+        panY = touch.clientY - startY;
+        updateTransform();
+    } else if (event.touches.length === 2 && initialPinchDistance !== null) {
+        const currentDistance = getDistance(event.touches);
+        const touchCenter = getTouchCenter(event.touches);
+        const scaleChange = currentDistance / initialPinchDistance;
+        scale *= scaleChange;
+        scale = Math.max(1, Math.min(scale, 150));
+
+        // Adjust pan to keep the touch center in the same position
+        panX -= (touchCenter.x - lastTouchCenter.x) * (scaleChange - 1);
+        panY -= (touchCenter.y - lastTouchCenter.y) * (scaleChange - 1);
+
+        initialPinchDistance = currentDistance;
+        lastTouchCenter = touchCenter;
+        updateTransform();
+    }
+});
+
+svgContainer.addEventListener('touchend', (event) => {
+    if (event.touches.length < 2) {
+        initialPinchDistance = null;
+        lastTouchCenter = null;
+    }
+    if (event.touches.length === 0) {
+        isPanning = false;
+    }
 });
