@@ -40,22 +40,22 @@ svgContainer.addEventListener('mouseleave', () => {
 
 // Pinch to zoom functionality
 let initialDistance = null;
+let initialScale = scale;
 
 svgContainer.addEventListener('touchstart', (event) => {
     if (event.touches.length === 2) {
         initialDistance = getDistance(event.touches[0], event.touches[1]);
+        initialScale = scale;
     }
 });
 
 svgContainer.addEventListener('touchmove', (event) => {
     if (event.touches.length === 2 && initialDistance) {
         const currentDistance = getDistance(event.touches[0], event.touches[1]);
-        const deltaDistance = currentDistance - initialDistance;
-        const sensitivity = baseSensitivity * scale; // Increase sensitivity with scale
-        scale += deltaDistance * sensitivity * 0.01;
+        const scaleChange = currentDistance / initialDistance;
+        scale = initialScale * scaleChange;
         scale = Math.max(1, Math.min(scale, 750));
         svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
-        initialDistance = currentDistance;
     }
 });
 
