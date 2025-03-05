@@ -9,12 +9,12 @@ function updateTransform() {
     const containerRect = svgContainer.getBoundingClientRect();
     const svgRect = svgElement.getBoundingClientRect();
 
-    // Ensure the SVG stays within the container bounds
-    const minX = containerRect.width - svgRect.width;
-    const minY = containerRect.height - svgRect.height;
+    // Increase the bounds for panning
+    const minX = containerRect.width - svgRect.width * 1.5;
+    const minY = containerRect.height - svgRect.height * 1.5;
 
-    panX = Math.min(0, Math.max(minX, panX));
-    panY = Math.min(0, Math.max(minY, panY));
+    panX = Math.min(containerRect.width * 0.5, Math.max(minX, panX));
+    panY = Math.min(containerRect.height * 0.5, Math.max(minY, panY));
 
     svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
 }
