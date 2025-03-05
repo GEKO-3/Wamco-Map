@@ -103,6 +103,10 @@ svgContainer.addEventListener('touchmove', (event) => {
         panX -= (touchCenter.x - lastTouchCenter.x) * (scaleChange - 1);
         panY -= (touchCenter.y - lastTouchCenter.y) * (scaleChange - 1);
 
+        // Additional panning down and to the right proportionally
+        panX -= (scaleChange - 1) * touchCenter.x;
+        panY -= (scaleChange - 1) * touchCenter.y;
+
         initialPinchDistance = currentDistance;
         lastTouchCenter = touchCenter;
         updateTransform();
