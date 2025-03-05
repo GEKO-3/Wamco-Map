@@ -106,8 +106,8 @@ svgContainer.addEventListener('touchmove', (event) => {
         panY -= dy;
 
         // Compensate for the drift more effectively
-        panX -= 2 * (scaleChange - 1) * touchCenter.x;
-        panY -= 2 * (scaleChange - 1) * touchCenter.y;
+        panX -= 5 * (scaleChange - 1) * touchCenter.x;
+        panY -= 5 * (scaleChange - 1) * touchCenter.y;
 
         initialPinchDistance = currentDistance;
         lastTouchCenter = touchCenter;
