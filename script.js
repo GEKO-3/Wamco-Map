@@ -29,7 +29,7 @@ svgContainer.addEventListener('wheel', (event) => {
     const delta = Math.sign(event.deltaY);
     const sensitivity = baseSensitivity * scale; // Increase sensitivity with scale
     scale -= delta * sensitivity;
-    scale = Math.max(1, Math.min(scale,150));
+    scale = Math.max(1, Math.min(scale, 150));
     updateTransform();
 });
 
