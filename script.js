@@ -1,6 +1,6 @@
 const svgContainer = document.getElementById('svg-container');
 const svgElement = svgContainer.querySelector('svg');
-let scale = 1;
+let scale = 1; // Revert initial scale to 1
 let panX = 0;
 let panY = 0;
 const baseSensitivity = 0.1;
@@ -53,17 +53,7 @@ svgContainer.addEventListener('mouseleave', () => {
     isPanning = false;
 });
 
-document.getElementById('zoom-in').addEventListener('click', () => {
-    scale += baseSensitivity * 50; // Increase zoom increment
-    scale = Math.min(scale, 150);
-    updateTransform();
-});
-
-document.getElementById('zoom-out').addEventListener('click', () => {
-    scale -= baseSensitivity * 50; // Increase zoom increment
-    scale = Math.max(1, scale);
-    updateTransform();
-});
+// Removed event listeners for zoom-in and zoom-out buttons
 
 let initialPinchDistance = null;
 let lastTouchCenter = null;
@@ -127,4 +117,16 @@ svgContainer.addEventListener('touchend', (event) => {
     if (event.touches.length === 0) {
         isPanning = false;
     }
+});
+
+// Automatically zoom in and pan to the center on page load
+window.addEventListener('load', () => {
+    const containerRect = svgContainer.getBoundingClientRect();
+    const svgRect = svgElement.getBoundingClientRect();
+
+    // Calculate the center position
+    panX = (containerRect.width - svgRect.width * scale) / 2;
+    panY = (containerRect.height - svgRect.height * scale) / 2;
+
+    updateTransform();
 });
