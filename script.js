@@ -100,13 +100,10 @@ svgContainer.addEventListener('touchmove', (event) => {
         scale = Math.max(1, Math.min(scale, 150));
 
         // Adjust pan to keep the touch center in the same position
-        panX -= (touchCenter.x - lastTouchCenter.x) * (scaleChange - 1);
-        panY -= (touchCenter.y - lastTouchCenter.y) * (scaleChange - 1);
-
-        // Apply a curved corrective pan factor
-        const correctiveFactor = Math.pow(scaleChange, 2);
-        panX -= correctiveFactor * (scaleChange - 1) * touchCenter.x;
-        panY -= correctiveFactor * (scaleChange - 1) * touchCenter.y;
+        const dx = (touchCenter.x - lastTouchCenter.x) * (scaleChange - 1);
+        const dy = (touchCenter.y - lastTouchCenter.y) * (scaleChange - 1);
+        panX -= dx;
+        panY -= dy;
 
         initialPinchDistance = currentDistance;
         lastTouchCenter = touchCenter;
