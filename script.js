@@ -9,19 +9,15 @@ function updateTransform() {
     const containerRect = svgContainer.getBoundingClientRect();
     const svgRect = svgElement.getBoundingClientRect();
 
-    // Adjust the bounds for panning to allow viewing the top and left of the map
+    // Adjust the bounds for panning to allow viewing the entire map
     const minX = containerRect.width - svgRect.width * scale;
     const minY = containerRect.height - svgRect.height * scale;
 
     panX = Math.min(0, Math.max(minX, panX));
     panY = Math.min(0, Math.max(minY, panY));
 
-    // Calculate the center of the current view
-    const centerX = containerRect.width / 2;
-    const centerY = containerRect.height / 2;
-
-    svgElement.style.transformOrigin = `${centerX}px ${centerY}px`; // Set zoom origin to center of current view
-    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+    svgElement.style.transformOrigin = `0 0`; // Set zoom origin to top-left corner
+    svgElement.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
 }
 
 svgContainer.addEventListener('wheel', (event) => {
