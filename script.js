@@ -5,13 +5,27 @@ let panX = 0;
 let panY = 0;
 const baseSensitivity = 0.1;
 
+function updateTransform() {
+    const containerRect = svgContainer.getBoundingClientRect();
+    const svgRect = svgElement.getBoundingClientRect();
+
+    // Ensure the SVG stays within the container bounds
+    const minX = containerRect.width - svgRect.width;
+    const minY = containerRect.height - svgRect.height;
+
+    panX = Math.min(0, Math.max(minX, panX));
+    panY = Math.min(0, Math.max(minY, panY));
+
+    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+}
+
 svgContainer.addEventListener('wheel', (event) => {
     event.preventDefault();
     const delta = Math.sign(event.deltaY);
     const sensitivity = baseSensitivity * scale; // Increase sensitivity with scale
     scale -= delta * sensitivity;
     scale = Math.max(1, Math.min(scale,150));
-    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+    updateTransform();
 });
 
 let isPanning = false;
@@ -27,7 +41,7 @@ svgContainer.addEventListener('mousemove', (event) => {
     if (!isPanning) return;
     panX = event.clientX - startX;
     panY = event.clientY - startY;
-    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+    updateTransform();
 });
 
 svgContainer.addEventListener('mouseup', () => {
@@ -41,11 +55,11 @@ svgContainer.addEventListener('mouseleave', () => {
 document.getElementById('zoom-in').addEventListener('click', () => {
     scale += baseSensitivity * 50// Increase zoom increment
     scale = Math.min(scale, 150);
-    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+    updateTransform();
 });
 
 document.getElementById('zoom-out').addEventListener('click', () => {
     scale -= baseSensitivity * 50// Increase zoom increment
     scale = Math.max(1, scale);
-    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+    updateTransform();
 });
