@@ -37,3 +37,15 @@ svgContainer.addEventListener('mouseup', () => {
 svgContainer.addEventListener('mouseleave', () => {
     isPanning = false;
 });
+
+document.getElementById('zoom-in').addEventListener('click', () => {
+    scale += baseSensitivity * 50// Increase zoom increment
+    scale = Math.min(scale, 150);
+    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+});
+
+document.getElementById('zoom-out').addEventListener('click', () => {
+    scale -= baseSensitivity * 50// Increase zoom increment
+    scale = Math.max(1, scale);
+    svgElement.style.transform = `scale(${scale}) translate(${panX}px, ${panY}px)`;
+});
