@@ -103,8 +103,8 @@ svgContainer.addEventListener('touchmove', (event) => {
         panX -= (touchCenter.x - lastTouchCenter.x) * (scaleChange - 1);
         panY -= (touchCenter.y - lastTouchCenter.y) * (scaleChange - 1);
 
-        // Make the corrective pan stronger as it is zoomed in more
-        const correctiveFactor = 2 * scaleChange;
+        // Further increase the corrective pan factor
+        const correctiveFactor = 3 * scaleChange;
         panX -= correctiveFactor * (scaleChange - 1) * touchCenter.x;
         panY -= correctiveFactor * (scaleChange - 1) * touchCenter.y;
 
