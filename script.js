@@ -130,3 +130,14 @@ function getTouchCenter(touch1, touch2) {
         y: (touch1.clientY + touch2.clientY) / 2
     };
 }
+
+// Load and parse the CSV data
+d3.csv('data.csv').then(data => {
+    // Assuming the CSV has columns 'id' and 'color'
+    data.forEach(row => {
+        const shape = svgElement.querySelector(`#Houses [id="${row.id}"]`);
+        if (shape) {
+            shape.style.fill = row.color;
+        }
+    });
+});
