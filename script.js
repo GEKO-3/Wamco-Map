@@ -172,6 +172,28 @@ d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvY
     });
 });
 
+function updateColors() {
+    d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvYr3OKDviBuFPBP4qHttnPq8AgqXfVFt2fpXz0MgKRiUi74kAFRXQ9UbS/pub?gid=1368116406&single=true&output=csv').then(data => {
+        const defaultColor = '#d1d1d1';
+        const dataMap = new Map(data.map(row => [row.id, row.color]));
+
+        svgElement.querySelectorAll('#Houses a').forEach(shape => {
+            const id = shape.id;
+            const color = dataMap.get(id) || defaultColor;
+            const gElement = shape.querySelector('g');
+            if (gElement) {
+                gElement.style.fill = color;
+            }
+        });
+    });
+}
+
+// Initial call to update colors
+updateColors();
+
+// Set interval to update colors every minute
+setInterval(updateColors, 60000);
+
 function highlightElement(houseId) {
     const shape = svgElement.querySelector(`#Houses [id="${houseId}"]`);
     if (shape) {
