@@ -234,12 +234,16 @@ document.getElementById('search-bar').addEventListener('input', function() {
     suggestions.innerHTML = '';
     let matches = [];
 
+    // Reset all previously selected suggestions
+    names.forEach(name => {
+        name.classList.remove('highlight-search', 'selected-suggestion');
+        name.style.fontSize = name.getAttribute('data-original-font-size'); // Reset to original font size
+    });
+
     names.forEach(name => {
         if (name.textContent.toLowerCase().includes(searchTerm)) {
             matches.push(name.textContent);
             name.classList.add('highlight-search');
-        } else {
-            name.classList.remove('highlight-search');
         }
     });
 
@@ -274,6 +278,10 @@ document.getElementById('search-bar').addEventListener('input', function() {
         stopSearchButton.style.display = 'none';
     }
     adjustHighlightSize();
+});
+
+document.querySelectorAll('#Names text').forEach(name => {
+    name.setAttribute('data-original-font-size', name.style.fontSize); // Store original font size
 });
 
 document.addEventListener('click', function(event) {
