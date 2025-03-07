@@ -219,6 +219,7 @@ function openDialog(houseId) {
     const district = houseData ? houseData['district'] : '';
     const registration = houseData ? houseData['registration'] : '';
     const contact = houseData ? houseData['contact'] : '';
+    const account = houseData ? houseData['account'] : '';
     const addressStyle = address === 'Unknown Address' ? 'style="color: gray; font-style: italic;"' : '';
 
     const dialog = document.createElement('div');
@@ -235,6 +236,7 @@ function openDialog(houseId) {
         ${district ? `<p><span class="label">District:</span> <span class="value">${district}</span></p>` : ''}
         ${registration ? `<p><span class="label">Registration:</span> <span class="value">${registration}</span></p>` : ''}
         ${contact ? `<p><span class="label">Contact:</span> <span class="value"><a href="tel:${contact}">${contact}</a></span></p>` : ''}
+        ${account ? `<button onclick="window.open('${account}', '_blank')">Veshifaara 360</button>` : ''}
         <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
         <button onclick="closeDialog()">Close</button>
     `;
