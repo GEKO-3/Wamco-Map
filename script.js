@@ -238,9 +238,10 @@ function openDialog(houseId) {
     `;
     document.body.appendChild(dialog);
 
-    // Add event listener to close dialog when clicking outside
+    // Add event listener to close dialog when clicking or touching outside
     setTimeout(() => {
         document.addEventListener('click', closeDialogOnClickOutside);
+        document.addEventListener('touchstart', closeDialogOnClickOutside);
     }, 0);
 }
 
@@ -264,6 +265,7 @@ function closeDialog() {
                 dialog.parentElement.removeChild(dialog);
             }
             document.removeEventListener('click', closeDialogOnClickOutside);
+            document.removeEventListener('touchstart', closeDialogOnClickOutside);
         });
     }
 }
