@@ -254,6 +254,13 @@ document.getElementById('search-bar').addEventListener('input', function() {
     } else {
         suggestions.style.display = 'none';
     }
+
+    const stopSearchButton = document.getElementById('stop-search');
+    if (this.value.trim() !== '') {
+        stopSearchButton.style.display = 'block';
+    } else {
+        stopSearchButton.style.display = 'none';
+    }
 });
 
 document.addEventListener('click', function(event) {
@@ -261,4 +268,29 @@ document.addEventListener('click', function(event) {
     if (!suggestions.contains(event.target) && event.target.id !== 'search-bar') {
         suggestions.style.display = 'none';
     }
+});
+
+// Add event listener for stop search button
+document.getElementById('stop-search').addEventListener('click', function() {
+    document.getElementById('search-bar').value = '';
+    this.style.display = 'none';
+    const highlightedElements = document.querySelectorAll('.highlight-search');
+    highlightedElements.forEach(element => {
+        element.classList.remove('highlight-search');
+    });
+});
+
+document.getElementById('search-bar').addEventListener('input', function() {
+    const stopSearchButton = document.getElementById('stop-search');
+    if (this.value.trim() !== '') {
+        stopSearchButton.style.display = 'block';
+    } else {
+        stopSearchButton.style.display = 'none';
+    }
+});
+
+document.getElementById('stop-search').addEventListener('click', function() {
+    document.getElementById('search-bar').value = '';
+    this.style.display = 'none';
+    // Add any additional logic to stop the search here
 });

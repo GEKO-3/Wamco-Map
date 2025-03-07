@@ -28,6 +28,20 @@ svg {
     animation: dialogOpen 0.3s forwards;
 }
 
+#stop-search {
+    position: absolute;
+    top: 10px;
+    left: 220px; /* Adjust based on the position of the search bar */
+    height: 30px; /* Match the height of the search bar */
+    padding: 0 10px;
+    font-size: 16px;
+    z-index: 1000;
+    cursor: pointer;
+    background: gray;
+    border: none;
+    color: black;
+}
+
 @keyframes dialogOpen {
     from {
         opacity: 0;
