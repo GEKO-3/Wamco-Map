@@ -479,3 +479,63 @@ function closeUnmappedHouseholdsDialogOnClickOutside(event) {
         closeUnmappedHouseholdsDialog();
     }
 }
+
+document.getElementById('stop-search').style.display = 'block'; // Ensure the stop search button is always visible
+
+document.getElementById('search-bar').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const names = document.querySelectorAll('#Names text');
+    const suggestions = document.getElementById('suggestions');
+    suggestions.innerHTML = '';
+    let matches = [];
+
+    // Reset all previously selected suggestions
+    names.forEach(name => {
+        name.classList.remove('highlight-search', 'selected-suggestion');
+        name.style.fontSize = name.getAttribute('data-original-font-size'); // Reset to original font size
+    });
+
+    names.forEach(name => {
+        if (name.textContent.toLowerCase().includes(searchTerm)) {
+            matches.push(name.textContent);
+            name.classList.add('highlight-search');
+        }
+    });
+
+    if (matches.length > 0) {
+        suggestions.style.display = 'block';
+        matches.forEach(match => {
+            const div = document.createElement('div');
+            div.textContent = match;
+            div.classList.add('suggestion-item');
+            div.addEventListener('click', function() {
+                document.getElementById('search-bar').value = match;
+                suggestions.style.display = 'none';
+                names.forEach(name => {
+                    if (name.textContent === match) {
+                        name.classList.add('highlight-search', 'selected-suggestion');
+                    } else {
+                        name.classList.remove('highlight-search', 'selected-suggestion');
+                    }
+                });
+                adjustHighlightSize();
+            });
+            suggestions.appendChild(div);
+        });
+    } else {
+        suggestions.style.display = 'none';
+    }
+
+    adjustHighlightSize();
+});
+
+document.getElementById('stop-search').addEventListener('click', function() {
+    document.getElementById('search-bar').value = '';
+    const highlightedElements = document.querySelectorAll('.highlight-search');
+    highlightedElements.forEach(element => {
+        element.classList.remove('highlight-search', 'selected-suggestion');
+        element.style.fontSize = element.getAttribute('data-original-font-size'); // Reset to original font size
+    });
+    clearEffects(); // Clear additional effects
+    adjustHighlightSize();
+});
