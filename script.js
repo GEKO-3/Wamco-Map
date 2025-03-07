@@ -156,11 +156,18 @@ function getTouchCenter(touch1, touch2) {
     };
 }
 
-// Load and parse the CSV data
-d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvYr3OKDviBuFPBP4qHttnPq8AgqXfVFt2fpXz0MgKRiUi74kAFRXQ9UbS/pub?gid=1368116406&single=true&output=csv').then(data => {
-    // Assuming the CSV has columns 'id' and 'color'
+let csvData = [];
+
+function fetchData() {
+    return d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvYr3OKDviBuFPBP4qHttnPq8AgqXfVFt2fpXz0MgKRiUi74kAFRXQ9UbS/pub?gid=1368116406&single=true&output=csv').then(data => {
+        csvData = data;
+        updateColors();
+    });
+}
+
+function updateColors() {
     const defaultColor = '#d1d1d1';
-    const dataMap = new Map(data.map(row => [row.id, row.color]));
+    const dataMap = new Map(csvData.map(row => [row.id, row.color]));
 
     svgElement.querySelectorAll('#Houses a').forEach(shape => {
         const id = shape.id;
@@ -170,29 +177,13 @@ d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvY
             gElement.style.fill = color;
         }
     });
-});
-
-function updateColors() {
-    d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvYr3OKDviBuFPBP4qHttnPq8AgqXfVFt2fpXz0MgKRiUi74kAFRXQ9UbS/pub?gid=1368116406&single=true&output=csv').then(data => {
-        const defaultColor = '#d1d1d1';
-        const dataMap = new Map(data.map(row => [row.id, row.color]));
-
-        svgElement.querySelectorAll('#Houses a').forEach(shape => {
-            const id = shape.id;
-            const color = dataMap.get(id) || defaultColor;
-            const gElement = shape.querySelector('g');
-            if (gElement) {
-                gElement.style.fill = color;
-            }
-        });
-    });
 }
 
-// Initial call to update colors
-updateColors();
+// Initial call to fetch data and update colors
+fetchData();
 
 // Set interval to update colors every minute
-setInterval(updateColors, 60000);
+setInterval(fetchData, 60000);
 
 function highlightElement(houseId) {
     const shape = svgElement.querySelector(`#Houses [id="${houseId}"]`);
@@ -216,10 +207,15 @@ function openDialog(houseId) {
     // Highlight the element
     highlightElement(houseId);
 
+    // Fetch the corresponding address from the local CSV data
+    const houseData = csvData.find(row => row.id === houseId);
+    const address = houseData ? houseData['address'] : 'Unknown Address';
+    const addressStyle = address === 'Unknown Address' ? 'style="color: gray; font-style: italic;"' : '';
+
     const dialog = document.createElement('div');
     dialog.id = 'dialog-box';
     dialog.innerHTML = `
-        <h2>House Information</h2>
+        <h2 ${addressStyle}>${address}</h2>
         <p>House ID: ${houseId}</p>
         <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
         <button onclick="closeDialog()">Close</button>
