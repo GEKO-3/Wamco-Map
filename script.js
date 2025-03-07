@@ -298,7 +298,7 @@ document.getElementById('stop-search').addEventListener('click', function() {
     const highlightedElements = document.querySelectorAll('.highlight-search');
     highlightedElements.forEach(element => {
         element.classList.remove('highlight-search', 'selected-suggestion');
-        element.style.fontSize = ''; // Reset font size
+        element.style.fontSize = element.getAttribute('data-original-font-size'); // Reset to original font size
     });
     clearEffects(); // Clear additional effects
 });
