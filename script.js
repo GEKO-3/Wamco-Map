@@ -324,5 +324,6 @@ function adjustHighlightSize() {
     highlights.forEach(highlight => {
         const newSize = 500/scale; // Calculate new size based on zoom level
         highlight.style.fontSize = `${Math.max(newSize, 5)}px`; // Ensure minimum size of 5px
+        highlight.classList.add('enlarged-highlight-search'); // Add enlarged class
     });
 }

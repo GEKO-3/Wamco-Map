@@ -87,12 +87,13 @@ body {
     z-index: 1000; /* Ensure the search bar appears on top of everything */
 }
 .highlight-search {
-    fill: red;
+    fill: rgb(216, 0, 25);
     font-weight: bold;
     transition: font-size 0.2s ease;
 }
 .enlarged-highlight-search {
     font-size: 200px; /* Initial size for the lowest zoom level */
+    opacity: 0.5; /* Add transparency */
 }
 #suggestions {
     position: absolute;
