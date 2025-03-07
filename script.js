@@ -49,15 +49,18 @@ function zoomOut(mouseX, mouseY, sensitivity) {
 
 let isPanning = false;
 let startX, startY;
+let panOccurred = false;
 
 svgContainer.addEventListener('mousedown', (event) => {
     isPanning = true;
+    panOccurred = false;
     startX = event.clientX - panX;
     startY = event.clientY - panY;
 });
 
 svgContainer.addEventListener('mousemove', (event) => {
     if (!isPanning) return;
+    panOccurred = true;
     panX = event.clientX - startX;
     panY = event.clientY - startY;
     svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
@@ -88,6 +91,7 @@ svgContainer.addEventListener('touchstart', (event) => {
         startY = touchCenter.y - panY;
     } else if (event.touches.length === 1) {
         isPanning = true;
+        panOccurred = false;
         startX = event.touches[0].clientX - panX;
         startY = event.touches[0].clientY - panY;
     }
@@ -110,6 +114,7 @@ svgContainer.addEventListener('touchmove', (event) => {
         svgElement.style.transformOrigin = '0 0';
         svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
     } else if (event.touches.length === 1 && isPanning) {
+        panOccurred = true;
         panX = event.touches[0].clientX - startX;
         panY = event.touches[0].clientY - startY;
         svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
@@ -141,7 +146,12 @@ d3.csv('data.csv').then(data => {
         }
     });
 });
+
 function openDialog(houseId) {
+    if (panOccurred) return; // Prevent dialog from opening if a pan occurred
+    // Close any existing dialog
+    closeDialog();
+    
     const dialog = document.createElement('div');
     dialog.id = 'dialog-box';
     dialog.style.position = 'fixed';
