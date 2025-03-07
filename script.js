@@ -218,6 +218,7 @@ function openDialog(houseId) {
     const road = houseData ? houseData['road'] : '';
     const district = houseData ? houseData['district'] : '';
     const registration = houseData ? houseData['registration'] : '';
+    const contact = houseData ? houseData['contact'] : '';
     const addressStyle = address === 'Unknown Address' ? 'style="color: gray; font-style: italic;"' : '';
 
     const dialog = document.createElement('div');
@@ -233,6 +234,7 @@ function openDialog(houseId) {
         ${road ? `<p><span class="label">Road:</span> <span class="value">${road}</span></p>` : ''}
         ${district ? `<p><span class="label">District:</span> <span class="value">${district}</span></p>` : ''}
         ${registration ? `<p><span class="label">Registration:</span> <span class="value">${registration}</span></p>` : ''}
+        ${contact ? `<p><span class="label">Contact:</span> <span class="value"><a href="tel:${contact}">${contact}</a></span></p>` : ''}
         <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
         <button onclick="closeDialog()">Close</button>
     `;
