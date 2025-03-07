@@ -393,3 +393,89 @@ function adjustHighlightSize() {
         highlight.style.fontSize = `${Math.max(newSize, 5)}px`; // Ensure minimum size of 5px
     });
 }
+
+document.getElementById('unmapped-button').addEventListener('click', openUnmappedHouseholdsDialog);
+
+function openUnmappedHouseholdsDialog() {
+    // Remove any existing dialog
+    const existingDialog = document.getElementById('unmapped-households-dialog');
+    if (existingDialog) {
+        existingDialog.parentElement.removeChild(existingDialog);
+    }
+
+    const unmappedHouseholds = csvData.filter(row => 
+        row.zone && 
+        (row.registration === 'Wamco' || row.registration === 'Wamco (E)' || row.registration === 'Wamco (D)') && 
+        !row.id
+    );
+
+    const dialog = document.createElement('div');
+    dialog.id = 'unmapped-households-dialog';
+    dialog.style.position = 'fixed';
+    dialog.style.top = '50%';
+    dialog.style.left = '50%';
+    dialog.style.transform = 'translate(-50%, -50%)';
+    dialog.style.zIndex = '10000'; // Ensure the dialog is on top
+    dialog.style.backgroundColor = 'white';
+    dialog.style.padding = '20px';
+    dialog.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    dialog.innerHTML = `
+        <h2>Unmapped</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Address</th>
+                    <th>Customer Name</th>
+                    <th>Contact</th>
+                    <th>Block</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${unmappedHouseholds.map(row => `
+                    <tr>
+                        <td>${row.address || 'Unknown'}</td>
+                        <td>${row['customer-name'] || 'Unknown'}</td>
+                        <td>${row.contact ? `<a href="tel:${row.contact}">${row.contact}</a>` : 'Unknown'}</td>
+                        <td>${row.block || 'Unknown'}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        <button id="close-unmapped-dialog-button">Close</button>
+    `;
+    document.body.appendChild(dialog);
+
+    // Add event listener to close dialog when clicking or touching outside
+    setTimeout(() => {
+        document.addEventListener('click', closeUnmappedHouseholdsDialogOnClickOutside);
+        document.addEventListener('touchstart', closeUnmappedHouseholdsDialogOnClickOutside);
+    }, 0);
+
+    // Add event listener to close dialog when clicking the close button
+    document.getElementById('close-unmapped-dialog-button').addEventListener('click', closeUnmappedHouseholdsDialog);
+}
+
+function closeUnmappedHouseholdsDialog() {
+    const dialog = document.getElementById('unmapped-households-dialog');
+    if (dialog) {
+        dialog.classList.add('closing');
+        dialog.addEventListener('animationend', () => {
+            if (dialog.parentElement) {
+                dialog.parentElement.removeChild(dialog);
+                document.removeEventListener('click', closeUnmappedHouseholdsDialogOnClickOutside);
+                document.removeEventListener('touchstart', closeUnmappedHouseholdsDialogOnClickOutside);
+            }
+        });
+        // Remove the dialog immediately without waiting for animation
+        if (dialog.parentElement) {
+            dialog.parentElement.removeChild(dialog);
+        }
+    }
+}
+
+function closeUnmappedHouseholdsDialogOnClickOutside(event) {
+    const dialog = document.getElementById('unmapped-households-dialog');
+    if (dialog && !dialog.contains(event.target)) {
+        closeUnmappedHouseholdsDialog();
+    }
+}
