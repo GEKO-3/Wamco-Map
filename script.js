@@ -147,11 +147,28 @@ d3.csv('data.csv').then(data => {
     });
 });
 
+function highlightElement(houseId) {
+    const shape = svgElement.querySelector(`#Houses [id="${houseId}"]`);
+    if (shape) {
+        shape.classList.add('highlight');
+    }
+}
+
+function removeHighlight(houseId) {
+    const shape = svgElement.querySelector(`#Houses [id="${houseId}"]`);
+    if (shape) {
+        shape.classList.remove('highlight');
+    }
+}
+
 function openDialog(houseId) {
     if (panOccurred) return; // Prevent dialog from opening if a pan occurred
     // Close any existing dialog
     closeDialog();
     
+    // Highlight the element
+    highlightElement(houseId);
+
     const dialog = document.createElement('div');
     dialog.id = 'dialog-box';
     dialog.innerHTML = `
@@ -180,6 +197,8 @@ function copyToClipboard(text) {
 function closeDialog() {
     const dialog = document.getElementById('dialog-box');
     if (dialog) {
+        const houseId = dialog.querySelector('p').textContent.split(': ')[1];
+        removeHighlight(houseId);
         dialog.classList.add('closing');
         dialog.addEventListener('animationend', () => {
             if (dialog.parentElement) {
