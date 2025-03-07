@@ -207,17 +207,19 @@ function openDialog(houseId) {
     // Highlight the element
     highlightElement(houseId);
 
-    // Fetch the corresponding address from the local CSV data
+    // Fetch the corresponding address and customer name from the local CSV data
     const houseData = csvData.find(row => row.id === houseId);
     const address = houseData ? houseData['address'] : 'Unknown Address';
+    const customerName = houseData ? houseData['customer-name'] : 'Unknown Customer';
     const addressStyle = address === 'Unknown Address' ? 'style="color: gray; font-style: italic;"' : '';
 
     const dialog = document.createElement('div');
     dialog.id = 'dialog-box';
     dialog.innerHTML = `
         <h2 ${addressStyle}>${address}</h2>
-        <p>House ID: ${houseId}</p>
-        <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
+        <p>ID: ${houseId}</p>
+        <p>Name: ${customerName}</p>
+        <button onclick="copyToClipboard('${houseId}')">Copy ID</button>
         <button onclick="closeDialog()">Close</button>
     `;
     document.body.appendChild(dialog);
