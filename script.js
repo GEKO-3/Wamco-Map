@@ -1,5 +1,5 @@
 const svgContainer = document.getElementById('svg-container');
-const svgElement = svgContainer.querySelector('svg');
+const svgElement = document.getElementById('main-svg'); // Updated to use the new id
 let scale = 1;
 let panX = 0;
 let panY = 0;
@@ -143,12 +143,17 @@ function getTouchCenter(touch1, touch2) {
 }
 
 // Load and parse the CSV data
-d3.csv('data.csv').then(data => {
+d3.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzwi3qwiuAxaPfT3Jj2_OvYr3OKDviBuFPBP4qHttnPq8AgqXfVFt2fpXz0MgKRiUi74kAFRXQ9UbS/pub?gid=1368116406&single=true&output=csv').then(data => {
     // Assuming the CSV has columns 'id' and 'color'
-    data.forEach(row => {
-        const shape = svgElement.querySelector(`#Houses [id="${row.id}"]`);
-        if (shape) {
-            shape.style.fill = row.color;
+    const defaultColor = '#d1d1d1';
+    const dataMap = new Map(data.map(row => [row.id, row.color]));
+
+    svgElement.querySelectorAll('#Houses a').forEach(shape => {
+        const id = shape.id;
+        const color = dataMap.get(id) || defaultColor;
+        const gElement = shape.querySelector('g');
+        if (gElement) {
+            gElement.style.fill = color;
         }
     });
 });
