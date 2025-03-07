@@ -322,7 +322,7 @@ document.getElementById('stop-search').addEventListener('click', function() {
 function adjustHighlightSize() {
     const highlights = document.querySelectorAll('.highlight-search');
     highlights.forEach(highlight => {
-        const newSize = 500 scale; // Calculate new size based on zoom level
+        const newSize = 500/scale; // Calculate new size based on zoom level
         highlight.style.fontSize = `${Math.max(newSize, 5)}px`; // Ensure minimum size of 5px
     });
 }
