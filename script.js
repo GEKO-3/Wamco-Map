@@ -157,6 +157,7 @@ function openDialog(houseId) {
     dialog.innerHTML = `
         <h2>House Information</h2>
         <p>House ID: ${houseId}</p>
+        <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
         <button onclick="closeDialog()">Close</button>
     `;
     document.body.appendChild(dialog);
@@ -165,6 +166,15 @@ function openDialog(houseId) {
     setTimeout(() => {
         document.addEventListener('click', closeDialogOnClickOutside);
     }, 0);
+}
+
+function copyToClipboard(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
 }
 
 function closeDialog() {
