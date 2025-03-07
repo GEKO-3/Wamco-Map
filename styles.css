@@ -95,6 +95,17 @@ body {
     font-size: 200px; /* Initial size for the lowest zoom level */
     opacity: 0.5; /* Add transparency */
 }
+
+.selected-suggestion .highlight-search {
+    font-size: 200px; /* Initial size for the lowest zoom level */
+    opacity: 0.5; /* Add transparency */
+}
+
+.suggestion-item.selected .enlarged-highlight-search {
+    font-size: 200px; /* Initial size for the lowest zoom level */
+    opacity: 0.5; /* Add transparency */
+}
+
 #suggestions {
     position: absolute;
     top: 40px; /* Adjust based on the height of the search bar */

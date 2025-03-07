@@ -254,11 +254,12 @@ document.getElementById('search-bar').addEventListener('input', function() {
                 suggestions.style.display = 'none';
                 names.forEach(name => {
                     if (name.textContent === match) {
-                        name.classList.add('highlight-search');
+                        name.classList.add('highlight-search', 'selected-suggestion');
                     } else {
-                        name.classList.remove('highlight-search');
+                        name.classList.remove('highlight-search', 'selected-suggestion');
                     }
                 });
+                adjustHighlightSize();
             });
             suggestions.appendChild(div);
         });
@@ -288,8 +289,7 @@ document.getElementById('stop-search').addEventListener('click', function() {
     this.style.display = 'none';
     const highlightedElements = document.querySelectorAll('.highlight-search');
     highlightedElements.forEach(element => {
-        element.classList.remove('highlight-search');
-        element.classList.remove('enlarged-highlight-search'); // Remove enlarged class
+        element.classList.remove('highlight-search', 'selected-suggestion');
         element.style.fontSize = ''; // Reset font size
     });
     clearEffects(); // Clear additional effects
@@ -325,10 +325,9 @@ document.getElementById('stop-search').addEventListener('click', function() {
 });
 
 function adjustHighlightSize() {
-    const highlights = document.querySelectorAll('.highlight-search');
+    const highlights = document.querySelectorAll('.selected-suggestion');
     highlights.forEach(highlight => {
-        const newSize = 500/scale; // Calculate new size based on zoom level
+        const newSize = 500 / scale; // Calculate new size based on zoom level
         highlight.style.fontSize = `${Math.max(newSize, 5)}px`; // Ensure minimum size of 5px
-        highlight.classList.add('enlarged-highlight-search'); // Add enlarged class
     });
 }
