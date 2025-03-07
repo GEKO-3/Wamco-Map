@@ -154,14 +154,6 @@ function openDialog(houseId) {
     
     const dialog = document.createElement('div');
     dialog.id = 'dialog-box';
-    dialog.style.position = 'fixed';
-    dialog.style.left = '50%';
-    dialog.style.top = '50%';
-    dialog.style.transform = 'translate(-50%, -50%)';
-    dialog.style.padding = '20px';
-    dialog.style.backgroundColor = 'white';
-    dialog.style.border = '1px solid #ccc';
-    dialog.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
     dialog.innerHTML = `
         <h2>House Information</h2>
         <p>House ID: ${houseId}</p>
@@ -178,8 +170,13 @@ function openDialog(houseId) {
 function closeDialog() {
     const dialog = document.getElementById('dialog-box');
     if (dialog) {
-        document.body.removeChild(dialog);
-        document.removeEventListener('click', closeDialogOnClickOutside);
+        dialog.classList.add('closing');
+        dialog.addEventListener('animationend', () => {
+            if (dialog.parentElement) {
+                dialog.parentElement.removeChild(dialog);
+            }
+            document.removeEventListener('click', closeDialogOnClickOutside);
+        });
     }
 }
 

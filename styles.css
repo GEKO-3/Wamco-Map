@@ -16,3 +16,40 @@ svg {
     height: 100%;
     transform-origin: center center;
 }
+#dialog-box {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: dialogOpen 0.3s forwards;
+}
+
+@keyframes dialogOpen {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes dialogClose {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+}
+
+#dialog-box.closing {
+    animation: dialogClose 0.3s forwards;
+}
