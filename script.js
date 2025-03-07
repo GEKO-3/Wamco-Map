@@ -81,6 +81,7 @@ let initialTouchDistance = 0;
 let initialTouchScale = 1;
 let initialTouchPanX = 0;
 let initialTouchPanY = 0;
+let touchTimeout;
 
 svgContainer.addEventListener('touchstart', (event) => {
     event.preventDefault(); // Disable default touch controls
@@ -97,6 +98,17 @@ svgContainer.addEventListener('touchstart', (event) => {
         panOccurred = false;
         startX = event.touches[0].clientX - panX;
         startY = event.touches[0].clientY - panY;
+        touchTimeout = setTimeout(() => {
+            const touch = event.touches[0];
+            const simulatedEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            touch.target.dispatchEvent(simulatedEvent);
+        }, 500); // 500ms delay to simulate long press
     }
 });
 
@@ -124,11 +136,13 @@ svgContainer.addEventListener('touchmove', (event) => {
         svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
         adjustHighlightSize();
     }
+    clearTimeout(touchTimeout);
 });
 
 svgContainer.addEventListener('touchend', () => {
     isPanning = false;
     adjustHighlightSize();
+    clearTimeout(touchTimeout);
 });
 
 function getDistance(touch1, touch2) {
