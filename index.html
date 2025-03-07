@@ -6,50 +6,6 @@
     <title>Wamco Map</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Added d3.js library -->
-    <style>
-        /* ...existing styles... */
-        body {
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
-        }
-        .highlight {
-            stroke: yellow;
-            stroke-width: 5px;
-        }
-        #search-bar {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 5px;
-            font-size: 16px;
-            user-select: text; /* Allow text selection for the search bar */
-            z-index: 1000; /* Ensure the search bar appears on top of everything */
-        }
-        .highlight-search {
-            fill: red;
-            font-weight: bold;
-        }
-        #suggestions {
-            position: absolute;
-            top: 40px; /* Adjust based on the height of the search bar */
-            left: 10px;
-            background: white;
-            border: 1px solid #ccc;
-            z-index: 1000;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-        }
-        .suggestion-item {
-            padding: 5px;
-            cursor: pointer;
-        }
-        .suggestion-item:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 <body>
     <input type="text" id="search-bar" placeholder="Search for names...">

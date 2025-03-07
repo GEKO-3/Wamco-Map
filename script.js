@@ -31,6 +31,7 @@ function zoomIn(mouseX, mouseY, sensitivity) {
     scale = newScale;
     svgElement.style.transformOrigin = '0 0';
     svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+    adjustHighlightSize();
 }
 
 function zoomOut(mouseX, mouseY, sensitivity) {
@@ -45,6 +46,7 @@ function zoomOut(mouseX, mouseY, sensitivity) {
     scale = newScale;
     svgElement.style.transformOrigin = '0 0';
     svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+    adjustHighlightSize();
 }
 
 let isPanning = false;
@@ -64,6 +66,7 @@ svgContainer.addEventListener('mousemove', (event) => {
     panX = event.clientX - startX;
     panY = event.clientY - startY;
     svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+    adjustHighlightSize();
 });
 
 svgContainer.addEventListener('mouseup', () => {
@@ -113,16 +116,19 @@ svgContainer.addEventListener('touchmove', (event) => {
         scale = newScale;
         svgElement.style.transformOrigin = '0 0';
         svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+        adjustHighlightSize();
     } else if (event.touches.length === 1 && isPanning) {
         panOccurred = true;
         panX = event.touches[0].clientX - startX;
         panY = event.touches[0].clientY - startY;
         svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+        adjustHighlightSize();
     }
 });
 
 svgContainer.addEventListener('touchend', () => {
     isPanning = false;
+    adjustHighlightSize();
 });
 
 function getDistance(touch1, touch2) {
@@ -261,6 +267,7 @@ document.getElementById('search-bar').addEventListener('input', function() {
     } else {
         stopSearchButton.style.display = 'none';
     }
+    adjustHighlightSize();
 });
 
 document.addEventListener('click', function(event) {
@@ -277,8 +284,23 @@ document.getElementById('stop-search').addEventListener('click', function() {
     const highlightedElements = document.querySelectorAll('.highlight-search');
     highlightedElements.forEach(element => {
         element.classList.remove('highlight-search');
+        element.classList.remove('enlarged-highlight-search'); // Remove enlarged class
+        element.style.fontSize = ''; // Reset font size
     });
+    clearEffects(); // Clear additional effects
 });
+
+function clearEffects() {
+    // Add logic to clear any additional effects here
+    const highlights = document.querySelectorAll('.highlight-search');
+    highlights.forEach(highlight => {
+        highlight.classList.remove('highlight-search');
+        highlight.classList.remove('enlarged-highlight-search'); // Remove enlarged class
+        highlight.style.fontSize = ''; // Reset font size
+    });
+    const suggestions = document.getElementById('suggestions');
+    suggestions.style.display = 'none';
+}
 
 document.getElementById('search-bar').addEventListener('input', function() {
     const stopSearchButton = document.getElementById('stop-search');
@@ -287,10 +309,20 @@ document.getElementById('search-bar').addEventListener('input', function() {
     } else {
         stopSearchButton.style.display = 'none';
     }
+    adjustHighlightSize();
 });
 
 document.getElementById('stop-search').addEventListener('click', function() {
     document.getElementById('search-bar').value = '';
     this.style.display = 'none';
     // Add any additional logic to stop the search here
+    adjustHighlightSize();
 });
+
+function adjustHighlightSize() {
+    const highlights = document.querySelectorAll('.highlight-search');
+    highlights.forEach(highlight => {
+        const newSize = 500 scale; // Calculate new size based on zoom level
+        highlight.style.fontSize = `${Math.max(newSize, 5)}px`; // Ensure minimum size of 5px
+    });
+}
