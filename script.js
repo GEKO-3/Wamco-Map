@@ -210,7 +210,14 @@ function openDialog(houseId) {
     // Fetch the corresponding address and customer name from the local CSV data
     const houseData = csvData.find(row => row.id === houseId);
     const address = houseData ? houseData['address'] : 'Unknown Address';
-    const customerName = houseData ? houseData['customer-name'] : 'Unknown Customer';
+    const customerName = houseData ? houseData['customer-name'] : '';
+    const idCard = houseData ? houseData['id-card'] : '';
+    const customerId = houseData ? houseData['customer-id'] : '';
+    const zone = houseData ? houseData['zone'] : '';
+    const block = houseData ? houseData['block'] : '';
+    const road = houseData ? houseData['road'] : '';
+    const district = houseData ? houseData['district'] : '';
+    const registration = houseData ? houseData['registration'] : '';
     const addressStyle = address === 'Unknown Address' ? 'style="color: gray; font-style: italic;"' : '';
 
     const dialog = document.createElement('div');
@@ -218,7 +225,14 @@ function openDialog(houseId) {
     dialog.innerHTML = `
         <h2 ${addressStyle}>${address}</h2>
         <p><span class="label">House ID:</span> <span class="value">${houseId}</span></p>
-        <p><span class="label">Customer Name:</span> <span class="value">${customerName}</span></p>
+        ${customerName ? `<p><span class="label">Customer Name:</span> <span class="value">${customerName}</span></p>` : ''}
+        ${idCard ? `<p><span class="label">ID Card:</span> <span class="value">${idCard}</span></p>` : ''}
+        ${customerId ? `<p><span class="label">Customer ID:</span> <span class="value">${customerId}</span></p>` : ''}
+        ${zone ? `<p><span class="label">Zone:</span> <span class="value">${zone}</span></p>` : ''}
+        ${block ? `<p><span class="label">Block:</span> <span class="value">${block}</span></p>` : ''}
+        ${road ? `<p><span class="label">Road:</span> <span class="value">${road}</span></p>` : ''}
+        ${district ? `<p><span class="label">District:</span> <span class="value">${district}</span></p>` : ''}
+        ${registration ? `<p><span class="label">Registration:</span> <span class="value">${registration}</span></p>` : ''}
         <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
         <button onclick="closeDialog()">Close</button>
     `;
