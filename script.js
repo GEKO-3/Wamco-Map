@@ -217,9 +217,9 @@ function openDialog(houseId) {
     dialog.id = 'dialog-box';
     dialog.innerHTML = `
         <h2 ${addressStyle}>${address}</h2>
-        <p>ID: ${houseId}</p>
-        <p>Name: ${customerName}</p>
-        <button onclick="copyToClipboard('${houseId}')">Copy ID</button>
+        <p><span class="label">House ID:</span> <span class="value">${houseId}</span></p>
+        <p><span class="label">Customer Name:</span> <span class="value">${customerName}</span></p>
+        <button onclick="copyToClipboard('${houseId}')">Copy House ID</button>
         <button onclick="closeDialog()">Close</button>
     `;
     document.body.appendChild(dialog);
