@@ -168,11 +168,24 @@ function openDialog(houseId) {
         <button onclick="closeDialog()">Close</button>
     `;
     document.body.appendChild(dialog);
+
+    // Add event listener to close dialog when clicking outside
+    setTimeout(() => {
+        document.addEventListener('click', closeDialogOnClickOutside);
+    }, 0);
 }
 
 function closeDialog() {
     const dialog = document.getElementById('dialog-box');
     if (dialog) {
         document.body.removeChild(dialog);
+        document.removeEventListener('click', closeDialogOnClickOutside);
+    }
+}
+
+function closeDialogOnClickOutside(event) {
+    const dialog = document.getElementById('dialog-box');
+    if (dialog && !dialog.contains(event.target)) {
+        closeDialog();
     }
 }
