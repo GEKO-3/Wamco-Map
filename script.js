@@ -52,6 +52,7 @@ function zoomOut(mouseX, mouseY, sensitivity) {
 let isPanning = false;
 let startX, startY;
 let panOccurred = false;
+const panThreshold = 10; // Threshold in pixels to detect a pan
 
 svgContainer.addEventListener('mousedown', (event) => {
     isPanning = true;
@@ -62,11 +63,15 @@ svgContainer.addEventListener('mousedown', (event) => {
 
 svgContainer.addEventListener('mousemove', (event) => {
     if (!isPanning) return;
-    panOccurred = true;
-    panX = event.clientX - startX;
-    panY = event.clientY - startY;
-    svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
-    adjustHighlightSize();
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+    if (Math.abs(deltaX) > panThreshold || Math.abs(deltaY) > panThreshold) {
+        panOccurred = true;
+        panX = event.clientX - startX;
+        panY = event.clientY - startY;
+        svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+        adjustHighlightSize();
+    }
 });
 
 svgContainer.addEventListener('mouseup', () => {
@@ -99,15 +104,17 @@ svgContainer.addEventListener('touchstart', (event) => {
         startX = event.touches[0].clientX - panX;
         startY = event.touches[0].clientY - panY;
         touchTimeout = setTimeout(() => {
-            const touch = event.touches[0];
-            const simulatedEvent = new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                view: window,
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            touch.target.dispatchEvent(simulatedEvent);
+            if (!panOccurred) { // Ensure no pan occurred
+                const touch = event.touches[0];
+                const simulatedEvent = new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window,
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                touch.target.dispatchEvent(simulatedEvent);
+            }
         }, 500); // 500ms delay to simulate long press
     }
 });
@@ -130,11 +137,15 @@ svgContainer.addEventListener('touchmove', (event) => {
         svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
         adjustHighlightSize();
     } else if (event.touches.length === 1 && isPanning) {
-        panOccurred = true;
-        panX = event.touches[0].clientX - startX;
-        panY = event.touches[0].clientY - startY;
-        svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
-        adjustHighlightSize();
+        const deltaX = event.touches[0].clientX - startX;
+        const deltaY = event.touches[0].clientY - startY;
+        if (Math.abs(deltaX) > panThreshold || Math.abs(deltaY) > panThreshold) {
+            panOccurred = true;
+            panX = event.touches[0].clientX - startX;
+            panY = event.touches[0].clientY - startY;
+            svgElement.style.transform = `scale(${scale}) translate(${panX / scale}px, ${panY / scale}px)`;
+            adjustHighlightSize();
+        }
     }
     clearTimeout(touchTimeout);
 });

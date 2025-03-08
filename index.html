@@ -23,7 +23,24 @@
     <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Added d3.js library -->
 </head>
 <body>
-    <div id="loading-overlay">Loading...</div>
+    <!-- <script>
+        const loggedIn = sessionStorage.getItem('loggedIn');
+        const loginTime = sessionStorage.getItem('loginTime');
+        const currentTime = new Date().getTime();
+        const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        console.log('Checking login status'); // Debug log
+
+        if (!loggedIn || (currentTime - loginTime > oneDay)) {
+            console.log('Not logged in or session expired'); // Debug log
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('loginTime');
+            window.location.href = 'login.html';
+        } else {
+            console.log('Login valid'); // Debug log
+        }
+    </script> -->
+    <div id="loading-overlay">Loading....</div>
     <input type="text" id="search-bar" placeholder="Search for names...">
     <button id="stop-search" style="height: 30px; display: none;">✖</button>
     <div id="suggestions"></div>
