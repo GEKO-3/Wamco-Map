@@ -469,6 +469,8 @@ function closeUnmappedHouseholdsDialog() {
         // Remove the dialog immediately without waiting for animation
         if (dialog.parentElement) {
             dialog.parentElement.removeChild(dialog);
+            document.removeEventListener('click', closeUnmappedHouseholdsDialogOnClickOutside);
+            document.removeEventListener('touchstart', closeUnmappedHouseholdsDialogOnClickOutside);
         }
     }
 }
